@@ -1,0 +1,22 @@
+# --- secrets: NEVER commit these ---
+.streamlit/secrets.toml
+.env
+*.key
+
+# --- editor / tooling folders ---
+.claude/
+.vscode/
+.idea/
+
+# --- generated / ephemeral ---
+# regenerated on demand from the Gemini API:
+cache/ai_cache.json
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+
+# NOTE: cache/nvd_cache.json and cache/demo_cves.json ARE committed on purpose —
+# they hold the pre-cached demo data so "Load example" works instantly (and
+# offline for the NVD part) on the deployed app.

@@ -1,0 +1,212 @@
+{
+  "CVE-2021-44228": {
+    "id": "CVE-2021-44228",
+    "description": "Apache Log4j2 2.0-beta9 through 2.15.0 (excluding security releases 2.12.2, 2.12.3, and 2.3.1) JNDI features used in configuration, log messages, and parameters do not protect against attacker controlled LDAP and other JNDI related endpoints. An attacker who can control log messages or log message parameters can execute arbitrary code loaded from LDAP servers when message lookup substitution is enabled. From log4j 2.15.0, this behavior has been disabled by default. From version 2.16.0 (along with 2.12.2, 2.12.3, and 2.3.1), this functionality has been completely removed. Note that this vulnerability is specific to log4j-core and does not affect log4net, log4cxx, or other Apache Logging Services projects.",
+    "cvss": 10.0,
+    "attack_vector": "NETWORK",
+    "product": "siemens 6bk1602-0aa12-0tp0 firmware"
+  },
+  "CVE-2020-1472": {
+    "id": "CVE-2020-1472",
+    "description": "An elevation of privilege vulnerability exists when an attacker establishes a vulnerable Netlogon secure channel connection to a domain controller, using the Netlogon Remote Protocol (MS-NRPC). An attacker who successfully exploited the vulnerability could run a specially crafted application on a device on the network.\nTo exploit the vulnerability, an unauthenticated attacker would be required to use MS-NRPC to connect to a domain controller to obtain domain administrator access.\nMicrosoft is addressing the vulnerability in a phased two-part rollout. These updates address the vulnerability by modifying how Netlogon handles the usage of Netlogon secure channels.\nFor guidelines on how to manage the changes required for this vulnerability and more information on the phased rollout, see  How to manage the changes in Netlogon secure channel connections associated with CVE-2020-1472 (updated September 28, 2020).\nWhen the second phase of Windows updates become available in Q1 2021, customers will be notified via a revision to this security vulnerability. If you wish to be notified when these updates are released, we recommend that you register for the security notifications mailer to be alerted of content changes to this advisory. See Microsoft Technical Security Notifications.",
+    "cvss": 10.0,
+    "attack_vector": "NETWORK",
+    "product": "microsoft windows server 1903"
+  },
+  "CVE-2014-6271": {
+    "id": "CVE-2014-6271",
+    "description": "GNU Bash through 4.3 processes trailing strings after function definitions in the values of environment variables, which allows remote attackers to execute arbitrary code via a crafted environment, as demonstrated by vectors involving the ForceCommand feature in OpenSSH sshd, the mod_cgi and mod_cgid modules in the Apache HTTP Server, scripts executed by unspecified DHCP clients, and other situations in which setting the environment occurs across a privilege boundary from Bash execution, aka \"ShellShock.\"  NOTE: the original fix for this issue was incorrect; CVE-2014-7169 has been assigned to cover the vulnerability that is still present after the incorrect fix.",
+    "cvss": 9.8,
+    "attack_vector": "NETWORK",
+    "product": "gnu bash"
+  },
+  "CVE-2019-0708": {
+    "id": "CVE-2019-0708",
+    "description": "A remote code execution vulnerability exists in Remote Desktop Services formerly known as Terminal Services when an unauthenticated attacker connects to the target system using RDP and sends specially crafted requests, aka 'Remote Desktop Services Remote Code Execution Vulnerability'.",
+    "cvss": 9.8,
+    "attack_vector": "NETWORK",
+    "product": "microsoft windows 7"
+  },
+  "CVE-2017-5638": {
+    "id": "CVE-2017-5638",
+    "description": "The Jakarta Multipart parser in Apache Struts 2 2.3.x before 2.3.32 and 2.5.x before 2.5.10.1 has incorrect exception handling and error-message generation during file-upload attempts, which allows remote attackers to execute arbitrary commands via a crafted Content-Type, Content-Disposition, or Content-Length HTTP header, as exploited in the wild in March 2017 with a Content-Type header containing a #cmd= string.",
+    "cvss": 9.8,
+    "attack_vector": "NETWORK",
+    "product": "apache struts"
+  },
+  "CVE-2021-26855": {
+    "id": "CVE-2021-26855",
+    "description": "Microsoft Exchange Server Remote Code Execution Vulnerability",
+    "cvss": 9.8,
+    "attack_vector": "NETWORK",
+    "product": "microsoft exchange server"
+  },
+  "CVE-2023-46604": {
+    "id": "CVE-2023-46604",
+    "description": "The Java OpenWire protocol marshaller is vulnerable to Remote Code \nExecution. This vulnerability may allow a remote attacker with network \naccess to either a Java-based OpenWire broker or client to run arbitrary\n shell commands by manipulating serialized class types in the OpenWire \nprotocol to cause either the client or the broker (respectively) to \ninstantiate any class on the classpath.\n\nUsers are recommended to upgrade\n both brokers and clients to version 5.15.16, 5.16.7, 5.17.6, or 5.18.3 \nwhich fixes this issue.",
+    "cvss": 9.8,
+    "attack_vector": "NETWORK",
+    "product": "apache activemq"
+  },
+  "CVE-2022-22965": {
+    "id": "CVE-2022-22965",
+    "description": "A Spring MVC or Spring WebFlux application running on JDK 9+ may be vulnerable to remote code execution (RCE) via data binding. The specific exploit requires the application to run on Tomcat as a WAR deployment. If the application is deployed as a Spring Boot executable jar, i.e. the default, it is not vulnerable to the exploit. However, the nature of the vulnerability is more general, and there may be other ways to exploit it.",
+    "cvss": 9.8,
+    "attack_vector": "NETWORK",
+    "product": "vmware spring framework"
+  },
+  "CVE-2019-19781": {
+    "id": "CVE-2019-19781",
+    "description": "An issue was discovered in Citrix Application Delivery Controller (ADC) and Gateway 10.5, 11.1, 12.0, 12.1, and 13.0. They allow Directory Traversal.",
+    "cvss": 9.8,
+    "attack_vector": "NETWORK",
+    "product": "citrix application delivery controller firmware"
+  },
+  "CVE-2021-45046": {
+    "id": "CVE-2021-45046",
+    "description": "It was found that the fix to address CVE-2021-44228 in Apache Log4j 2.15.0 was incomplete in certain non-default configurations. This could allows attackers with control over Thread Context Map (MDC) input data when the logging configuration uses a non-default Pattern Layout with either a Context Lookup (for example, $${ctx:loginId}) or a Thread Context Map pattern (%X, %mdc, or %MDC) to craft malicious input data using a JNDI Lookup pattern resulting in an information leak and remote code execution in some environments and local code execution in all environments. Log4j 2.16.0 (Java 8) and 2.12.2 (Java 7) fix this issue by removing support for message lookup patterns and disabling JNDI functionality by default.",
+    "cvss": 9.0,
+    "attack_vector": "NETWORK",
+    "product": "apache log4j"
+  },
+  "CVE-2017-0144": {
+    "id": "CVE-2017-0144",
+    "description": "The SMBv1 server in Microsoft Windows Vista SP2; Windows Server 2008 SP2 and R2 SP1; Windows 7 SP1; Windows 8.1; Windows Server 2012 Gold and R2; Windows RT 8.1; and Windows 10 Gold, 1511, and 1607; and Windows Server 2016 allows remote attackers to execute arbitrary code via crafted packets, aka \"Windows SMB Remote Code Execution Vulnerability.\" This vulnerability is different from those described in CVE-2017-0143, CVE-2017-0145, CVE-2017-0146, and CVE-2017-0148.",
+    "cvss": 8.8,
+    "attack_vector": "NETWORK",
+    "product": "microsoft server message block"
+  },
+  "CVE-2022-41040": {
+    "id": "CVE-2022-41040",
+    "description": "Microsoft Exchange Server Elevation of Privilege Vulnerability",
+    "cvss": 8.8,
+    "attack_vector": "NETWORK",
+    "product": "microsoft exchange server"
+  },
+  "CVE-2018-11776": {
+    "id": "CVE-2018-11776",
+    "description": "Apache Struts versions 2.3 to 2.3.34 and 2.5 to 2.5.16 suffer from possible Remote Code Execution when alwaysSelectFullNamespace is true (either by user or a plugin like Convention Plugin) and then: results are used with no namespace and in same time, its upper package have no or wildcard namespace and similar to results, same possibility when using url tag which doesn't have value and action set and in same time, its upper package have no or wildcard namespace.",
+    "cvss": 8.1,
+    "attack_vector": "NETWORK",
+    "product": "apache struts"
+  },
+  "CVE-2022-30190": {
+    "id": "CVE-2022-30190",
+    "description": "A remote code execution vulnerability exists when MSDT is called using the URL protocol from a calling application such as Word. An attacker who successfully exploits this vulnerability can run arbitrary code with the privileges of the calling application. The attacker can then install programs, view, change, or delete data, or create new accounts in the context allowed by the user\u2019s rights.\nPlease see the\u00a0MSRC Blog Entry for important information about steps you can take to protect your system from this vulnerability.",
+    "cvss": 7.8,
+    "attack_vector": "LOCAL",
+    "product": "microsoft windows 10 1507"
+  },
+  "CVE-2022-22047": {
+    "id": "CVE-2022-22047",
+    "description": "Windows Client Server Run-time Subsystem (CSRSS) Elevation of Privilege Vulnerability",
+    "cvss": 7.8,
+    "attack_vector": "LOCAL",
+    "product": "microsoft windows 10 1507"
+  },
+  "CVE-2023-28252": {
+    "id": "CVE-2023-28252",
+    "description": "Windows Common Log File System Driver Elevation of Privilege Vulnerability",
+    "cvss": 7.8,
+    "attack_vector": "LOCAL",
+    "product": "microsoft windows 10 1507"
+  },
+  "CVE-2014-0160": {
+    "id": "CVE-2014-0160",
+    "description": "The (1) TLS and (2) DTLS implementations in OpenSSL 1.0.1 before 1.0.1g do not properly handle Heartbeat Extension packets, which allows remote attackers to obtain sensitive information from process memory via crafted packets that trigger a buffer over-read, as demonstrated by reading private keys, related to d1_both.c and t1_lib.c, aka the Heartbleed bug.",
+    "cvss": 7.5,
+    "attack_vector": "NETWORK",
+    "product": "openssl openssl"
+  },
+  "CVE-2018-8174": {
+    "id": "CVE-2018-8174",
+    "description": "A remote code execution vulnerability exists in the way that the VBScript engine handles objects in memory, aka \"Windows VBScript Engine Remote Code Execution Vulnerability.\" This affects Windows 7, Windows Server 2012 R2, Windows RT 8.1, Windows Server 2008, Windows Server 2012, Windows 8.1, Windows Server 2016, Windows Server 2008 R2, Windows 10, Windows 10 Servers.",
+    "cvss": 7.5,
+    "attack_vector": "NETWORK",
+    "product": "microsoft windows 10 1607"
+  },
+  "CVE-2016-5195": {
+    "id": "CVE-2016-5195",
+    "description": "Race condition in mm/gup.c in the Linux kernel 2.x through 4.x before 4.8.3 allows local users to gain privileges by leveraging incorrect handling of a copy-on-write (COW) feature to write to a read-only memory mapping, as exploited in the wild in October 2016, aka \"Dirty COW.\"",
+    "cvss": 7.0,
+    "attack_vector": "LOCAL",
+    "product": "canonical ubuntu linux"
+  },
+  "CVE-2022-42889": {
+    "id": "CVE-2022-42889",
+    "description": "Apache Commons Text performs variable interpolation, allowing properties to be dynamically evaluated and expanded. The standard format for interpolation is \"${prefix:name}\", where \"prefix\" is used to locate an instance of org.apache.commons.text.lookup.StringLookup that performs the interpolation. Starting with version 1.5 and continuing through 1.9, the set of default Lookup instances included interpolators that could result in arbitrary code execution or contact with remote servers. These lookups are: - \"script\" - execute expressions using the JVM script execution engine (javax.script) - \"dns\" - resolve dns records - \"url\" - load values from urls, including from remote servers Applications using the interpolation defaults in the affected versions may be vulnerable to remote code execution or unintentional contact with remote servers if untrusted configuration values are used. Users are recommended to upgrade to Apache Commons Text 1.10.0, which disables the problematic interpolators by default.",
+    "cvss": 9.8,
+    "attack_vector": "NETWORK",
+    "product": "apache commons text"
+  },
+  "CVE-2022-1471": {
+    "id": "CVE-2022-1471",
+    "description": "SnakeYaml's Constructor() class does not restrict types which can be instantiated during deserialization.\u00a0Deserializing yaml content provided by an attacker can lead to remote code execution. We recommend using SnakeYaml's SafeConsturctor when parsing untrusted content to restrict deserialization. We recommend upgrading to version 2.0 and beyond.",
+    "cvss": 9.8,
+    "attack_vector": "NETWORK",
+    "product": "snakeyaml project snakeyaml"
+  },
+  "CVE-2023-50164": {
+    "id": "CVE-2023-50164",
+    "description": "An attacker can manipulate file upload params to enable paths traversal and under some circumstances this can lead to uploading a malicious file which can be used to perform Remote Code Execution.\nUsers are recommended to upgrade to versions Struts 2.5.33 or Struts 6.3.0.2 or greater to\u00a0fix this issue.",
+    "cvss": 9.8,
+    "attack_vector": "NETWORK",
+    "product": "apache struts"
+  },
+  "CVE-2022-42920": {
+    "id": "CVE-2022-42920",
+    "description": "Apache Commons BCEL has a number of APIs that would normally only allow changing specific class characteristics. However, due to an out-of-bounds writing issue, these APIs can be used to produce arbitrary bytecode. This could be abused in applications that pass attacker-controllable data to those APIs, giving the attacker more control over the resulting bytecode than otherwise expected. Update to Apache Commons BCEL 6.6.0.",
+    "cvss": 9.8,
+    "attack_vector": "NETWORK",
+    "product": "apache commons bcel"
+  },
+  "CVE-2023-34034": {
+    "id": "CVE-2023-34034",
+    "description": "Using \"**\" as a pattern in Spring Security configuration \nfor WebFlux creates a mismatch in pattern matching between Spring \nSecurity and Spring WebFlux, and the potential for a security bypass.\n\n",
+    "cvss": 9.8,
+    "attack_vector": "NETWORK",
+    "product": "vmware spring security"
+  },
+  "CVE-2022-36760": {
+    "id": "CVE-2022-36760",
+    "description": "Inconsistent Interpretation of HTTP Requests ('HTTP Request Smuggling') vulnerability in mod_proxy_ajp of Apache HTTP Server allows an attacker to smuggle requests to the AJP server it forwards requests to.  This issue affects Apache HTTP Server Apache HTTP Server 2.4 version 2.4.54 and prior versions.",
+    "cvss": 9.0,
+    "attack_vector": "NETWORK",
+    "product": "apache http server"
+  },
+  "CVE-2021-22118": {
+    "id": "CVE-2021-22118",
+    "description": "In Spring Framework, versions 5.2.x prior to 5.2.15 and versions 5.3.x prior to 5.3.7, a WebFlux application is vulnerable to a privilege escalation: by (re)creating the temporary storage directory, a locally authenticated malicious user can read or modify files that have been uploaded to the WebFlux application, or overwrite arbitrary files with multipart request data.",
+    "cvss": 7.8,
+    "attack_vector": "LOCAL",
+    "product": "vmware spring framework"
+  },
+  "CVE-2020-36518": {
+    "id": "CVE-2020-36518",
+    "description": "jackson-databind before 2.13.0 allows a Java StackOverflow exception and denial of service via a large depth of nested objects.",
+    "cvss": 7.5,
+    "attack_vector": "NETWORK",
+    "product": "fasterxml jackson-databind"
+  },
+  "CVE-2022-38752": {
+    "id": "CVE-2022-38752",
+    "description": "Using snakeYAML to parse untrusted YAML files may be vulnerable to Denial of Service attacks (DOS). If the parser is running on user supplied input, an attacker may supply content that causes the parser to crash by stack-overflow.",
+    "cvss": 6.5,
+    "attack_vector": "NETWORK",
+    "product": "snakeyaml project snakeyaml"
+  },
+  "CVE-2020-15250": {
+    "id": "CVE-2020-15250",
+    "description": "In JUnit4 from version 4.7 and before 4.13.1, the test rule TemporaryFolder contains a local information disclosure vulnerability. On Unix like systems, the system's temporary directory is shared between all users on that system. Because of this, when files and directories are written into this directory they are, by default, readable by other users on that same system. This vulnerability does not allow other users to overwrite the contents of these directories or files. This is purely an information disclosure vulnerability. This vulnerability impacts you if the JUnit tests write sensitive information, like API keys or passwords, into the temporary folder, and the JUnit tests execute in an environment where the OS has other untrusted users. Because certain JDK file system APIs were only added in JDK 1.7, this this fix is dependent upon the version of the JDK you are using. For Java 1.7 and higher users: this vulnerability is fixed in 4.13.1. For Java 1.6 and lower users: no patch is available, you must use the workaround below. If you are unable to patch, or are stuck running on Java 1.6, specifying the `java.io.tmpdir` system environment variable to a directory that is exclusively owned by the executing user will fix this vulnerability. For more information, including an example of vulnerable code, see the referenced GitHub Security Advisory.",
+    "cvss": 5.5,
+    "attack_vector": "LOCAL",
+    "product": "junit junit4"
+  },
+  "CVE-2020-8908": {
+    "id": "CVE-2020-8908",
+    "description": "A temp directory creation vulnerability exists in all versions of Guava, allowing an attacker with access to the machine to potentially access data in a temporary directory created by the Guava API com.google.common.io.Files.createTempDir(). By default, on unix-like systems, the created directory is world-readable (readable by an attacker with access to the system). The method in question has been marked @Deprecated in versions 30.0 and later and should not be used. For Android developers, we recommend choosing a temporary directory API provided by Android, such as context.getCacheDir(). For other Java developers, we recommend migrating to the Java 7 API java.nio.file.Files.createTempDirectory() which explicitly configures permissions of 700, or configuring the Java runtime's java.io.tmpdir system property to point to a location whose permissions are appropriately configured.",
+    "cvss": 3.3,
+    "attack_vector": "LOCAL",
+    "product": "google guava"
+  }
+}
