@@ -222,7 +222,16 @@ def style_df(df, flags):
         return f"background-color: {bg}; color: {fg}; font-weight: 700;"
 
     def reversal_row(row):
-        return ["background-color: #fff3cd" if flags.get(row.name) else ""] * len(row)
+        """Outline (not fill) a reversal row in green, so text stays readable
+        in both light and dark themes — no background-color change at all."""
+        if not flags.get(row.name):
+            return [""] * len(row)
+        n = len(row)
+        border = "2px solid #2ecc71"
+        styles = [f"border-top: {border}; border-bottom: {border};"] * n
+        styles[0] += f" border-left: {border};"
+        styles[-1] += f" border-right: {border};"
+        return styles
 
     return (df.style
               .apply(reversal_row, axis=1)
