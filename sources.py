@@ -1,5 +1,5 @@
 """
-sources.py — fetch and cache the three data sources NextPatch relies on.
+sources.py - fetch and cache the three data sources NextPatch relies on.
 
 Three sources, three deliberately different caching rules:
 
@@ -46,7 +46,7 @@ EPSS_MAX_COUNT = 100
 
 
 # ===========================================================================
-# NVD  — permanent on-disk cache
+# NVD  - permanent on-disk cache
 # ===========================================================================
 
 def _load_nvd_cache() -> dict:
@@ -106,7 +106,7 @@ def _parse_nvd_item(vuln: dict) -> dict:
             description = d.get("value", "")
             break
 
-    # CVSS base score + attack vector — try v3.1, then v3.0, then v2.
+    # CVSS base score + attack vector - try v3.1, then v3.0, then v2.
     # The attack vector tells us HOW a flaw is reached: NETWORK (remotely, over
     # the internet), ADJACENT_NETWORK (same local network), LOCAL (needs local
     # access first) or PHYSICAL. v3 calls it 'attackVector'; v2 'accessVector'.
@@ -175,7 +175,7 @@ def fetch_nvd(cve_ids, api_key=None, progress=None) -> dict:
             # any non-200 (rate limit, server error): do NOT cache, so we can
             # retry on a later run.
         except requests.RequestException:
-            pass  # network hiccup — leave it uncached for a retry
+            pass  # network hiccup - leave it uncached for a retry
 
         # be polite to the rate limiter (no need to wait after the last one)
         if i < len(to_fetch) - 1:
@@ -194,7 +194,7 @@ def fetch_nvd(cve_ids, api_key=None, progress=None) -> dict:
 
 
 # ===========================================================================
-# EPSS  — always fresh, batched
+# EPSS  - always fresh, batched
 # ===========================================================================
 
 def _batch_cves(cve_ids, max_chars=EPSS_MAX_CHARS, max_count=EPSS_MAX_COUNT):
@@ -219,7 +219,7 @@ def fetch_epss(cve_ids) -> dict:
     """
     Return {cve_id: probability_float} for CVEs that EPSS has data on.
 
-    A CVE that EPSS has never scored is simply ABSENT from the result — the
+    A CVE that EPSS has never scored is simply ABSENT from the result - the
     caller must treat "missing" as 'No data', never as a probability of 0.
     """
     result = {}
@@ -240,7 +240,7 @@ def fetch_epss(cve_ids) -> dict:
 
 
 # ===========================================================================
-# KEV  — always fresh, one file
+# KEV  - always fresh, one file
 # ===========================================================================
 
 def fetch_kev() -> set:
@@ -269,9 +269,9 @@ def fetch_kev() -> set:
 
 if __name__ == "__main__":
     sample = [
-        "CVE-2021-44228",  # Log4Shell — on KEV, very high EPSS
+        "CVE-2021-44228",  # Log4Shell - on KEV, very high EPSS
         "CVE-2014-0160",   # Heartbleed
-        "CVE-2017-0144",   # EternalBlue — on KEV
+        "CVE-2017-0144",   # EternalBlue - on KEV
         "CVE-2023-38408",  # a normal one
     ]
 

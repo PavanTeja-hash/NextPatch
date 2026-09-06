@@ -1,5 +1,5 @@
 """
-app.py — NextPatch: which vulnerabilities should you actually patch first?
+app.py - NextPatch: which vulnerabilities should you actually patch first?
 
 A scan finds 400 flaws. You can fix 20 this month. NextPatch ranks them by
 combining on-paper severity (CVSS) with real-world threat (is anyone actually
@@ -29,7 +29,7 @@ def _bridge_secrets_to_env():
 
     The framework-agnostic modules (sources.py, ai.py) read keys from
     environment variables. When deployed to Streamlit Community Cloud, secrets
-    are set in the dashboard and surfaced via st.secrets — so we copy them into
+    are set in the dashboard and surfaced via st.secrets - so we copy them into
     os.environ here. Locally, real env vars just win. Never commit real keys.
     """
     try:
@@ -37,7 +37,7 @@ def _bridge_secrets_to_env():
             if key not in os.environ and key in st.secrets:
                 os.environ[key] = str(st.secrets[key])
     except Exception:
-        pass  # no secrets.toml present (e.g. plain local run) — that's fine
+        pass  # no secrets.toml present (e.g. plain local run) - that's fine
 
 
 _bridge_secrets_to_env()
@@ -57,18 +57,18 @@ st.set_page_config(page_title="NextPatch", page_icon="🩹", layout="wide")
 
 # ===========================================================================
 # data loading  (fetch on demand, then keep in session so toggling the asset
-# context only RE-SCORES — it never re-fetches)
+# context only RE-SCORES - it never re-fetches)
 # ===========================================================================
 
 @st.cache_data(show_spinner=False, ttl=3600)
 def load_kev():
-    """KEV feed — fetched fresh, cached only for this session (one file)."""
+    """KEV feed - fetched fresh, cached only for this session (one file)."""
     return sources.fetch_kev()
 
 
 @st.cache_data(show_spinner=False, ttl=3600)
 def load_epss(cve_tuple):
-    """EPSS — fetched fresh, cached for the session, batched in one request."""
+    """EPSS - fetched fresh, cached for the session, batched in one request."""
     return sources.fetch_epss(list(cve_tuple))
 
 
@@ -81,12 +81,12 @@ def load_records(cve_ids):
     kev = load_kev()
     epss = load_epss(tuple(cve_ids))
 
-    # NVD — the slow one. Progress bar covers only genuinely-uncached CVEs.
+    # NVD - the slow one. Progress bar covers only genuinely-uncached CVEs.
     progress_box = st.empty()
     bar = st.progress(0.0)
 
     def on_progress(done, total, cve):
-        progress_box.write(f"Fetching NVD data… {done}/{total}  ({cve})")
+        progress_box.write(f"Fetching NVD data... {done}/{total}  ({cve})")
         bar.progress(done / total if total else 1.0)
 
     nvd = sources.fetch_nvd(cve_ids, progress=on_progress)
@@ -99,7 +99,7 @@ def load_records(cve_ids):
         records.append({
             "cve": cve,
             "cvss": info.get("cvss"),
-            "epss": epss.get(cve),        # None if EPSS has no data — never faked
+            "epss": epss.get(cve),        # None if EPSS has no data - never faked
             "on_kev": cve in kev,
             "attack_vector": info.get("attack_vector"),
             "description": info.get("description", ""),
@@ -109,7 +109,7 @@ def load_records(cve_ids):
 
 
 # ===========================================================================
-# reversal detection — the "money shot": a lower-CVSS flaw ranked above a
+# reversal detection - the "money shot": a lower-CVSS flaw ranked above a
 # higher-CVSS one, because the lower one is actually under attack.
 # ===========================================================================
 
@@ -117,15 +117,15 @@ def _is_dormant(s, epss_cap=0.10):
     """A 'scary on paper, nobody attacking it' flaw: not on KEV and low EPSS.
 
     These are exactly the flaws that a CVSS-only sort ranks too high. A flaw
-    with high EPSS but no KEV is NOT dormant — it's genuinely likely to be
-    attacked — so it doesn't count as a reversal victim.
+    with high EPSS but no KEV is NOT dormant - it's genuinely likely to be
+    attacked - so it doesn't count as a reversal victim.
     """
     return (not s["on_kev"]) and (s["epss"] is None or s["epss"] < epss_cap)
 
 
 def mark_reversals(scored, min_gap=2.0):
     """
-    Flag rows that outrank a clearly-scarier-BUT-DORMANT flaw — the real
+    Flag rows that outrank a clearly-scarier-BUT-DORMANT flaw - the real
     'money shot'. Row i is flagged if some lower-ranked flaw j has a CVSS at
     least `min_gap` higher yet is dormant (see _is_dormant). The gap is set high
     enough that only striking reversals (e.g. a CVSS 7 flaw above a CVSS 9.8 one)
@@ -183,7 +183,7 @@ def fmt_vector(av):
         "ADJACENT_NETWORK": "Adjacent",
         "LOCAL": "Local",
         "PHYSICAL": "Physical",
-    }.get(av, "—")
+    }.get(av, "-")
 
 
 def build_display_df(scored, flags):
@@ -196,10 +196,10 @@ def build_display_df(scored, flags):
             "CVSS": fmt_cvss(s["cvss"]),
             "Vector": fmt_vector(s.get("attack_vector")),
             "EPSS": fmt_epss(s["epss"]),
-            "KEV": "✔ Confirmed" if s["on_kev"] else "—",
+            "KEV": "✔ Confirmed" if s["on_kev"] else "-",
             "State": s["state"],
             "Flag": "⬆ Low CVSS, high priority" if flags.get(i) else "",
-            "Description": (s["description"][:90] + "…") if s.get("description") else "",
+            "Description": (s["description"][:90] + "...") if s.get("description") else "",
         })
     return pd.DataFrame(rows)
 
@@ -225,7 +225,7 @@ def style_df(df, flags):
         """
         Tint a reversal row solid green with white text.
 
-        st.dataframe's interactive grid is canvas-rendered, not real HTML — it
+        st.dataframe's interactive grid is canvas-rendered, not real HTML - it
         only understands background-color/color, so CSS borders are silently
         dropped. Both colors are set explicitly here (not just the background)
         so the row can't go invisible against a theme's default text color,
@@ -239,7 +239,7 @@ def style_df(df, flags):
               .apply(reversal_row, axis=1)
               .map(final_cell, subset=["Final"])
               .format({"Final": "{:.2f}",
-                       "CVSS": lambda v: "—" if pd.isna(v) else f"{v:.1f}"}))
+                       "CVSS": lambda v: "-" if pd.isna(v) else f"{v:.1f}"}))
 
 
 def build_csv(scored):
@@ -265,22 +265,22 @@ def build_csv(scored):
 
 
 def render_breakdown(s, ai_on):
-    """Show the full arithmetic chain for one scored CVE — every number visible."""
+    """Show the full arithmetic chain for one scored CVE - every number visible."""
     # threat
     if s["threat"] is None:
-        st.markdown("**Step 1 · Threat (0–10):** `Unknown` — no KEV, no EPSS data. "
+        st.markdown("**Step 1 · Threat (0-10):** `Unknown` - no KEV, no EPSS data. "
                     "We do **not** call this 0 or 'safe'; nobody has seen it "
                     "exploited *yet*.")
         threat_num = 0.0
     else:
-        st.markdown(f"**Step 1 · Threat (0–10):** `{s['threat']:.2f}`  — {s['threat_source']}")
+        st.markdown(f"**Step 1 · Threat (0-10):** `{s['threat']:.2f}`  - {s['threat_source']}")
         threat_num = s["threat"]
 
     # impact
     if s["cvss"] is None:
-        st.markdown("**Step 2 · Impact (0–10):** `No CVSS` from NVD.")
+        st.markdown("**Step 2 · Impact (0-10):** `No CVSS` from NVD.")
     else:
-        st.markdown(f"**Step 2 · Impact (0–10):** `{s['cvss']:.1f}`  — the CVSS base score")
+        st.markdown(f"**Step 2 · Impact (0-10):** `{s['cvss']:.1f}`  - the CVSS base score")
 
     # base
     st.markdown(
@@ -299,13 +299,25 @@ def render_breakdown(s, ai_on):
 
     # explain the attack-vector gate on the internet multiplier
     av = s.get("attack_vector") or "unknown"
-    if s.get("internet_requested") and not s.get("internet_applied"):
+    if s.get("test_machine"):
+        st.caption("↳ Throwaway test machine: the internet and sensitive-data "
+                   "boosts are skipped. A box we'd wipe anyway doesn't earn "
+                   "emergency attention.")
+    elif s.get("internet_requested") and not s.get("internet_applied"):
         st.caption(f"↳ Internet-facing ×1.5 was **not** applied: this flaw's attack "
                    f"vector is **{av}**, so it isn't reachable straight from the "
-                   f"internet — exposure doesn't make it easier to exploit.")
+                   f"internet. Exposure doesn't make it easier to exploit.")
     elif s.get("internet_applied"):
         st.caption(f"↳ Internet-facing ×1.5 applied: attack vector is **{av}** "
                    f"(reachable over the network).")
+
+    # the test-machine ceiling
+    if s.get("cap_applied"):
+        st.markdown(f"**Step 5 · Test-machine cap:** `{s['score_before_cap']:.2f}` "
+                    f"clamped to **`{s['test_cap']:.1f}`**")
+        st.caption("↳ A ceiling, not a multiplier. A ×0.5 discount could be "
+                   "cancelled out by the other boosts (1.5 × 1.3 × 0.5 = 0.975); "
+                   "a cap can't be.")
 
     st.markdown(f"**Final score = `{s['final_score']:.2f}`**")
 
@@ -315,12 +327,12 @@ def render_breakdown(s, ai_on):
     # AI plain-English translation (optional)
     if AI_IMPORTED and ai_on and s.get("description"):
         if st.button(f"Explain {s['cve']} in plain English", key=f"ai_{s['cve']}"):
-            with st.spinner("Asking Gemini…"):
+            with st.spinner("Asking Gemini..."):
                 st.info(ai.plain_english(s["cve"], s["description"]))
 
 
 # ===========================================================================
-# SIDEBAR — input mode + asset context
+# SIDEBAR - input mode + asset context
 # ===========================================================================
 
 PRESETS = {
@@ -358,21 +370,25 @@ with st.sidebar:
 
     st.divider()
     st.header("2 · Asset context")
-    st.caption("Where does this machine live? This only *re-scores* — it never "
+    st.caption("Where does this machine live? This only *re-scores* - it never "
                "re-fetches, so switching presets instantly reorders the list.")
 
-    st.selectbox("Preset (a shortcut — boxes stay editable)",
+    st.selectbox("Preset (a shortcut - boxes stay editable)",
                  list(PRESETS), key="preset", on_change=apply_preset)
 
     st.checkbox("Reachable from the internet  (× 1.5)", key="internet")
     st.checkbox("Holds sensitive data  (× 1.3)", key="sensitive")
-    st.checkbox("Throwaway test machine  (× 0.5)", key="test")
+    st.checkbox("Throwaway test machine  (caps score at 5.0)", key="test",
+                help="A disposable box is capped rather than boosted: the "
+                     "internet and sensitive-data multipliers are skipped and "
+                     "the score is clamped, so it can never outrank production.")
 
     st.divider()
     st.caption(
-        "**Weights are configurable.** The 0.6 / 0.4 split and the ×1.5 / ×1.3 / "
-        "×0.5 multipliers are a starting judgement, not science — you'd tune them "
-        "with your security team. They are not authoritative."
+        "**Weights are configurable.** The 0.6 / 0.4 split, the ×1.5 / ×1.3 "
+        "multipliers and the 5.0 test-machine cap are a starting judgement, not "
+        "science. You'd tune them with your security team. They are not "
+        "authoritative."
     )
 
     if AI_IMPORTED:
@@ -380,11 +396,11 @@ with st.sidebar:
         if ai_on:
             st.success("AI explanations: ON (Gemini key found)")
         else:
-            st.info(f"AI explanations: OFF — {ai.availability_reason()}. "
+            st.info(f"AI explanations: OFF - {ai.availability_reason()}. "
                     "The tool works fully without it.")
     else:
         ai_on = False
-        st.info("AI explanations: OFF — the ai module failed to import "
+        st.info("AI explanations: OFF - the ai module failed to import "
                 "(google-generativeai likely missing from requirements). "
                 "The tool works fully without it.")
 
@@ -396,7 +412,7 @@ context = {
 
 
 # ===========================================================================
-# MAIN — title + input
+# MAIN - title + input
 # ===========================================================================
 
 st.title("🩹 NextPatch")
@@ -415,7 +431,7 @@ if mode == "Load example (demo)":
         demo = json.loads(DEMO_FILE.read_text(encoding="utf-8"))
         demo_ids = demo.get("cve_ids", [])
         st.info(f"Demo list: **{len(demo_ids)}** hand-picked flaws chosen to show "
-                "the reversal — famous bugs, scary-but-dormant flaws, and "
+                "the reversal - famous bugs, scary-but-dormant flaws, and "
                 "moderate-looking flaws that are under active attack.")
         if st.button("▶  Load example", type="primary"):
             st.session_state.run = True
@@ -424,12 +440,12 @@ if mode == "Load example (demo)":
     else:
         st.warning("Demo data not built yet (cache/demo_cves.json missing).")
 else:
-    st.write("Paste CVE IDs (one per line or comma-separated). Messy input is fine — "
+    st.write("Paste CVE IDs (one per line or comma-separated). Messy input is fine - "
              "extra spaces, lowercase, duplicates and blank lines are handled, and "
              "lines with no CVE ID go to a separate *Needs manual review* list.")
     pasted = st.text_area("CVE IDs", height=160,
                           placeholder="CVE-2021-44228\ncve-2017-0144\nweak admin password on server 3")
-    uploaded = st.file_uploader("…or upload a CSV / text file", type=["csv", "txt"])
+    uploaded = st.file_uploader("...or upload a CSV / text file", type=["csv", "txt"])
 
     if st.button("▶  Score these CVEs", type="primary"):
         raw = pasted or ""
@@ -442,7 +458,7 @@ else:
 
 
 # ===========================================================================
-# MAIN — results
+# MAIN - results
 # ===========================================================================
 
 if st.session_state.get("run"):
@@ -471,7 +487,7 @@ if st.session_state.get("run"):
         rev = biggest_reversal(scored, flags)
         if rev:
             st.error(
-                f"**The reversal — this is the whole point.**  \n"
+                f"**The reversal - this is the whole point.**  \n"
                 f"**{rev['high']['cve']}** (CVSS **{rev['high']['cvss']:.1f}**, "
                 f"*{rev['high']['state']}*) is ranked **#{rev['high_rank']}**, "
                 f"*above* **{rev['low']['cve']}** (CVSS **{rev['low']['cvss']:.1f}**) "
@@ -485,7 +501,8 @@ if st.session_state.get("run"):
         active = [lbl for lbl, on in
                   [("internet-facing ×1.5", context["internet"]),
                    ("sensitive data ×1.3", context["sensitive"]),
-                   ("test machine ×0.5", context["test"])] if on]
+                   ("test machine (caps at 5.0, overrides the boosts)",
+                    context["test"])] if on]
         st.caption("Asset context applied: " + (", ".join(active) if active else "none"))
 
         # --- results table ---
@@ -502,16 +519,16 @@ if st.session_state.get("run"):
         # --- AI remediation for the top 10 (only if enabled) ---
         if AI_IMPORTED and ai_on:
             st.subheader("AI remediation write-ups (top 10)")
-            st.caption("The AI only *explains* — it never changes the ranking above.")
+            st.caption("The AI only *explains* - it never changes the ranking above.")
             if st.button("Generate write-ups for the top 10"):
                 for s in scored[:10]:
-                    with st.spinner(f"Writing up {s['cve']}…"):
+                    with st.spinner(f"Writing up {s['cve']}..."):
                         text = ai.remediation_writeup(s, context)
-                    with st.expander(f"{s['cve']} — final {s['final_score']:.2f}"):
+                    with st.expander(f"{s['cve']} - final {s['final_score']:.2f}"):
                         st.write(text)
 
         # --- per-CVE breakdown (step 5): every number, nothing hidden ---
-        st.subheader("🔍 Score breakdown — every number, nothing hidden")
+        st.subheader("🔍 Score breakdown - every number, nothing hidden")
         st.caption("Open any flaw to see exactly how its score was built. This is "
                    "why the ranking is auditable: it's arithmetic, not a model.")
         for i, s in enumerate(scored):

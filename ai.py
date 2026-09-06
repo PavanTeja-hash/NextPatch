@@ -1,11 +1,11 @@
 """
-ai.py — OPTIONAL Google Gemini layer. It EXPLAINS and WRITES; it never RANKS.
+ai.py - OPTIONAL Google Gemini layer. It EXPLAINS and WRITES; it never RANKS.
 
 Why the AI is kept away from the ranking: if a client asks "why is this third?",
 the answer must be arithmetic we can show them (see scoring.py), not "the model
 decided." A model can't be audited, and in security work an unexplainable
 priority list is unusable. So Gemini only turns numbers/jargon into readable
-English — the order on screen is always the plain math.
+English - the order on screen is always the plain math.
 
 The whole app must work with NO Gemini key. If the key or library is missing,
 is_available() returns False and the UI hides these features. Fetching, scoring
@@ -80,7 +80,7 @@ def _is_transient(err: str) -> bool:
 
 def _generate(prompt: str) -> str:
     """
-    One prompt in, plain text out — resilient to Gemini's transient overloads.
+    One prompt in, plain text out - resilient to Gemini's transient overloads.
 
     Gemini returns 503 "high demand" when a model is momentarily saturated.
     That's temporary, so we retry with exponential backoff, then fall back to a
@@ -128,7 +128,7 @@ def _cached(key: str, generate) -> str:
         return cache[key]
     try:
         text = generate().strip()
-    except Exception as exc:  # network/quota/model error — never crash the app
+    except Exception as exc:  # network/quota/model error - never crash the app
         return f"(AI unavailable right now: {exc})"
     cache[key] = text
     _save_cache(cache)
@@ -163,7 +163,7 @@ def remediation_writeup(scored: dict, context: dict) -> str:
     it's urgent on THIS machine given the asset context, and what to do.
 
     Cached per (CVE, asset-context) because the text references the context.
-    The AI is told the numbers as FACTS — it must not re-rank or invent data.
+    The AI is told the numbers as FACTS - it must not re-rank or invent data.
     """
     cve = scored["cve"]
     key = f"remediation::{cve}::{_context_sig(context)}"
@@ -175,7 +175,7 @@ def remediation_writeup(scored: dict, context: dict) -> str:
     ] if on]
     ctx_text = ", ".join(ctx_bits) if ctx_bits else "no special context set"
 
-    kev_text = ("It is on CISA's Known Exploited Vulnerabilities list — attackers "
+    kev_text = ("It is on CISA's Known Exploited Vulnerabilities list - attackers "
                 "are confirmed to be using it right now."
                 if scored["on_kev"] else
                 "It is not on CISA's confirmed-exploited list.")

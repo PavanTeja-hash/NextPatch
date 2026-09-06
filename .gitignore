@@ -17,6 +17,6 @@ __pycache__/
 venv/
 .DS_Store
 
-# NOTE: cache/nvd_cache.json and cache/demo_cves.json ARE committed on purpose —
+# NOTE: cache/nvd_cache.json and cache/demo_cves.json ARE committed on purpose -
 # they hold the pre-cached demo data so "Load example" works instantly (and
 # offline for the NVD part) on the deployed app.
