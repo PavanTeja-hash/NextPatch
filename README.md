@@ -1,5 +1,11 @@
 # 🩹 NextPatch
 
+### ▶ [Try the live app](https://nextpatch.streamlit.app/)
+
+No setup needed. Click **Load example** for an instant demo of 30 real CVEs.
+
+---
+
 **A vulnerability scan finds 400 flaws. Your team can fix 20 this month. Which 20?**
 
 NextPatch ranks a list of known software vulnerabilities (CVEs) by how urgent they
