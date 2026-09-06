@@ -226,7 +226,7 @@ def style_df(df, flags):
 
     return (df.style
               .apply(reversal_row, axis=1)
-              .applymap(final_cell, subset=["Final"])
+              .map(final_cell, subset=["Final"])
               .format({"Final": "{:.2f}",
                        "CVSS": lambda v: "—" if pd.isna(v) else f"{v:.1f}"}))
 
