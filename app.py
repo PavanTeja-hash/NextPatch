@@ -222,16 +222,18 @@ def style_df(df, flags):
         return f"background-color: {bg}; color: {fg}; font-weight: 700;"
 
     def reversal_row(row):
-        """Outline (not fill) a reversal row in green, so text stays readable
-        in both light and dark themes — no background-color change at all."""
+        """
+        Tint a reversal row solid green with white text.
+
+        st.dataframe's interactive grid is canvas-rendered, not real HTML — it
+        only understands background-color/color, so CSS borders are silently
+        dropped. Both colors are set explicitly here (not just the background)
+        so the row can't go invisible against a theme's default text color,
+        which is exactly what happened before.
+        """
         if not flags.get(row.name):
             return [""] * len(row)
-        n = len(row)
-        border = "2px solid #2ecc71"
-        styles = [f"border-top: {border}; border-bottom: {border};"] * n
-        styles[0] += f" border-left: {border};"
-        styles[-1] += f" border-right: {border};"
-        return styles
+        return ["background-color: #1b5e3a; color: #ffffff; font-weight: 600;"] * len(row)
 
     return (df.style
               .apply(reversal_row, axis=1)
