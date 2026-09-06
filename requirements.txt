@@ -1,4 +1,4 @@
-streamlit==1.63.0
-requests==2.34.2
-pandas==2.3.2
-google-generativeai==0.8.6
+streamlit
+requests
+pandas
+google-genai

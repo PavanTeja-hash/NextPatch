@@ -191,10 +191,18 @@ streamlit run app.py
 
 ### Dependency note
 
-`google-generativeai` is used because it's the specified stack, but Google has
-**deprecated** it in favour of the newer `google-genai` package. It still works;
-a future version of this project should migrate. The library also needs the REST
-transport (set in `ai.py`) to reach current Gemini models.
+This project uses **`google-genai`**, Google's current, maintained Gemini SDK.
+
+It originally used the older `google-generativeai` package, but Google has
+**deprecated** that one (it prints an end-of-support warning on import), and it
+failed to install on the deployment host — so the AI layer was migrated to
+`google-genai`. Only `ai.py` needed to change, because the AI layer is isolated
+behind `is_available()` / `plain_english()` / `remediation_writeup()`; scoring
+and fetching were untouched.
+
+Versions are intentionally **not pinned**: the code targets current APIs (e.g.
+`Styler.map`, which replaced the removed `Styler.applymap`), so tracking current
+releases is the correct target rather than freezing older ones.
 
 ---
 

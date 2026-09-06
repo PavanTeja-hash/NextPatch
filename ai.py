@@ -30,7 +30,7 @@ AI_CACHE_FILE = CACHE_DIR / "ai_cache.json"
 # keeps working as Google rotates versions. Override with the GEMINI_MODEL env var.
 MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-flash-latest")
 
-_model = None  # lazily created on first use
+_client = None  # lazily created on first use
 
 
 # --- availability ----------------------------------------------------------
@@ -44,9 +44,9 @@ def availability_reason() -> str:
     if not _api_key():
         return "no GEMINI_API_KEY found (check the host's env vars / Secrets)"
     try:
-        import google.generativeai  # noqa: F401
+        from google import genai  # noqa: F401
     except Exception as exc:
-        return f"google-generativeai import failed: {exc}"
+        return f"google-genai import failed: {exc}"
     return "ok"
 
 
@@ -55,14 +55,21 @@ def is_available() -> bool:
     return availability_reason() == "ok"
 
 
-def _get_model():
-    global _model
-    if _model is None:
-        import google.generativeai as genai
-        # REST transport: the deprecated gRPC path 404s on current models.
-        genai.configure(api_key=_api_key(), transport="rest")
-        _model = genai.GenerativeModel(MODEL_NAME)
-    return _model
+def _get_client():
+    """The google-genai client (the maintained SDK; google-generativeai is EOL)."""
+    global _client
+    if _client is None:
+        from google import genai
+        _client = genai.Client(api_key=_api_key())
+    return _client
+
+
+def _generate(prompt: str) -> str:
+    """One prompt in, plain text out."""
+    resp = _get_client().models.generate_content(
+        model=MODEL_NAME, contents=prompt
+    )
+    return resp.text or ""
 
 
 # --- disk cache ------------------------------------------------------------
@@ -106,7 +113,7 @@ def plain_english(cve_id: str, description: str) -> str:
             "Do not repeat the CVE ID or restate the raw description. "
             f"Technical description:\n{description}"
         )
-        return _get_model().generate_content(prompt).text
+        return _generate(prompt)
     return _cached(f"plain::{cve_id}", generate)
 
 
@@ -160,7 +167,7 @@ def remediation_writeup(scored: dict, context: dict) -> str:
             "THIS machine given the context above, (3) the practical next step "
             "(patch / upgrade / isolate). No headings, just the paragraph."
         )
-        return _get_model().generate_content(prompt).text
+        return _generate(prompt)
     return _cached(key, generate)
 
 
