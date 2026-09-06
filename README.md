@@ -187,7 +187,9 @@ streamlit run app.py
 - `NVD_API_KEY` — optional. Without it NVD allows 5 requests / 30s; with it, 50.
   The app works without it, just slower on never-before-seen CVEs.
 - `GEMINI_API_KEY` — optional. Enables the AI explanation features.
-- `GEMINI_MODEL` — optional, defaults to `gemini-flash-latest`.
+- `GEMINI_MODEL` — optional, defaults to `gemini-flash-lite-latest`. If that model
+  is overloaded (Gemini returns 503) the AI layer retries with backoff and then
+  falls back to other verified models automatically.
 
 ### Dependency note
 

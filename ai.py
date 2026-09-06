@@ -19,16 +19,24 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from pathlib import Path
 
 CACHE_DIR = Path(__file__).resolve().parent / "cache"
 CACHE_DIR.mkdir(exist_ok=True)
 AI_CACHE_FILE = CACHE_DIR / "ai_cache.json"
 
-# Model is configurable; a fast, cheap model is plenty for short explanations.
-# 'gemini-flash-latest' is an alias that tracks the current fast model, so it
-# keeps working as Google rotates versions. Override with the GEMINI_MODEL env var.
-MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-flash-latest")
+# A fast "lite" model is plenty for these short explanations, and the lite tiers
+# are less contended (fewer 503 "high demand" errors) than the flagship ones.
+# NOTE: the models/list endpoint advertises models this key cannot actually call
+# (e.g. gemini-2.5-flash lists fine but 404s on use), so every model named here
+# was verified with a real generate_content call. Override with GEMINI_MODEL.
+MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-flash-lite-latest")
+
+# Tried in order when the primary is overloaded or retired. All verified working.
+FALLBACK_MODELS = ["gemini-3.5-flash-lite", "gemini-flash-latest", "gemini-3.5-flash"]
+
+RETRIES = 3  # per model, with exponential backoff
 
 _client = None  # lazily created on first use
 
@@ -64,12 +72,38 @@ def _get_client():
     return _client
 
 
+def _is_transient(err: str) -> bool:
+    """503 = model overloaded, 429 = rate-limited. Both are worth retrying."""
+    return any(t in err for t in
+               ("503", "UNAVAILABLE", "429", "RESOURCE_EXHAUSTED", "overloaded"))
+
+
 def _generate(prompt: str) -> str:
-    """One prompt in, plain text out."""
-    resp = _get_client().models.generate_content(
-        model=MODEL_NAME, contents=prompt
-    )
-    return resp.text or ""
+    """
+    One prompt in, plain text out — resilient to Gemini's transient overloads.
+
+    Gemini returns 503 "high demand" when a model is momentarily saturated.
+    That's temporary, so we retry with exponential backoff, then fall back to a
+    less-contended model rather than giving up on the first failure.
+    """
+    client = _get_client()
+    models = [MODEL_NAME] + [m for m in FALLBACK_MODELS if m != MODEL_NAME]
+    last_err = "no response"
+
+    for model in models:
+        for attempt in range(RETRIES):
+            try:
+                resp = client.models.generate_content(model=model, contents=prompt)
+                if resp.text:
+                    return resp.text
+                last_err = "empty response"
+            except Exception as exc:
+                last_err = str(exc)
+                if _is_transient(last_err) and attempt < RETRIES - 1:
+                    time.sleep(1.5 * (2 ** attempt))  # 1.5s, 3s
+                    continue
+                break  # not transient (or out of retries) -> try next model
+    raise RuntimeError(last_err)
 
 
 # --- disk cache ------------------------------------------------------------
