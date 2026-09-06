@@ -380,10 +380,13 @@ with st.sidebar:
         if ai_on:
             st.success("AI explanations: ON (Gemini key found)")
         else:
-            st.info("AI explanations: OFF — set GEMINI_API_KEY to enable. "
+            st.info(f"AI explanations: OFF — {ai.availability_reason()}. "
                     "The tool works fully without it.")
     else:
         ai_on = False
+        st.info("AI explanations: OFF — the ai module failed to import "
+                "(google-generativeai likely missing from requirements). "
+                "The tool works fully without it.")
 
 context = {
     "internet": st.session_state.internet,

@@ -39,15 +39,20 @@ def _api_key():
     return os.environ.get("GEMINI_API_KEY")
 
 
-def is_available() -> bool:
-    """True only if BOTH the key is set AND the library imports."""
+def availability_reason() -> str:
+    """'ok' if the AI layer is usable, otherwise a one-line reason it isn't."""
     if not _api_key():
-        return False
+        return "no GEMINI_API_KEY found (check the host's env vars / Secrets)"
     try:
         import google.generativeai  # noqa: F401
-        return True
-    except Exception:
-        return False
+    except Exception as exc:
+        return f"google-generativeai import failed: {exc}"
+    return "ok"
+
+
+def is_available() -> bool:
+    """True only if BOTH the key is set AND the library imports."""
+    return availability_reason() == "ok"
 
 
 def _get_model():
