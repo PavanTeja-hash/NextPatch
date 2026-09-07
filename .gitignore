@@ -3,6 +3,11 @@
 .env
 *.key
 
+# --- personal study / revision material, not part of the project ---
+project-nextpatch.pdf
+notes/
+*.revision.pdf
+
 # --- editor / tooling folders ---
 .claude/
 .vscode/
